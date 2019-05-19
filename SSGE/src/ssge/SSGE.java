@@ -295,13 +295,10 @@ public class SSGE extends javax.swing.JFrame {
         jLabel8.setText("DLCs");
 
         jTextFieldVersion.setEditable(false);
-        jTextFieldVersion.setText("jTextField5");
 
         jTextFieldName.setEditable(false);
-        jTextFieldName.setText("jTextField6");
 
         jTextFieldDate.setEditable(false);
-        jTextFieldDate.setText("jTextField7");
 
         jTextAreaDLCS.setEditable(false);
         jTextAreaDLCS.setColumns(20);

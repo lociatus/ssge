@@ -366,19 +366,16 @@
             <Component class="javax.swing.JTextField" name="jTextFieldVersion">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" value="jTextField5"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldName">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" value="jTextField6"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldDate">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" value="jTextField7"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
