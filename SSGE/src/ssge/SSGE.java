@@ -5,9 +5,15 @@
  */
 package ssge;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
+import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFileChooser;
 
 /**
@@ -19,13 +25,24 @@ public class SSGE extends javax.swing.JFrame {
     private IOSaveGameFile sgf;
     private StellarisSaveGameObject saveGame;
     private List<DropDownItem> empireList;
+    private List<DropDownItem> speciesList;
+    private DefaultListModel speciesTraitsListModell;
+    private SaveGameParameter saveGameParameter;
 
     /**
-     * Creates new form PSGEGUI
+     * Creates new form SSGE
      */
     public SSGE() {
         this.sgf = new IOSaveGameFile();
         this.empireList = new ArrayList();
+        this.speciesList = new ArrayList();
+        this.speciesTraitsListModell = new DefaultListModel();
+        try {
+            URL url = getClass().getResource("parameter.xml");
+            this.saveGameParameter = new SaveGameParameter(url.getPath());
+        } catch(Exception e) {
+            System.out.println("parameter.xml not found\n e="+e);
+        }
         initComponents();
     }
 
@@ -38,6 +55,7 @@ public class SSGE extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBox16 = new javax.swing.JCheckBox();
         jTabbedPanel1 = new javax.swing.JTabbedPane();
         jPanelFile = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -103,6 +121,15 @@ public class SSGE extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPaneModifier = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel24 = new javax.swing.JLabel();
+        jComboBoxSpecies = new javax.swing.JComboBox<>();
+        jLabel25 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jListSpeciesTrails = new javax.swing.JList<>();
+        jButtonSpeciesUpdateChanges = new javax.swing.JButton();
+
+        jCheckBox16.setText("jCheckBox16");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -708,6 +735,76 @@ public class SSGE extends javax.swing.JFrame {
 
         jTabbedPanel1.addTab("Empire", jPanelEmpire);
 
+        jLabel24.setText("Species");
+
+        jComboBoxSpecies.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {" "}));
+        jComboBoxSpecies.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxSpeciesActionPerformed(evt);
+            }
+        });
+
+        jLabel25.setText("Trails");
+
+        jListSpeciesTrails.setModel(this.speciesTraitsListModell);
+        jListSpeciesTrails.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if(super.isSelectedIndex(index0)) {
+                    super.removeSelectionInterval(index0, index1);
+                }
+                else {
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+        });
+        jScrollPane3.setViewportView(jListSpeciesTrails);
+
+        jButtonSpeciesUpdateChanges.setText("Update changes");
+        jButtonSpeciesUpdateChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSpeciesUpdateChangesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel25))
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(203, 203, 203)
+                        .addComponent(jButtonSpeciesUpdateChanges)))
+                .addContainerGap(407, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24)
+                    .addComponent(jComboBoxSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel25)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonSpeciesUpdateChanges)
+                .addContainerGap(59, Short.MAX_VALUE))
+        );
+
+        jTabbedPanel1.addTab("Species", jPanel4);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -784,7 +881,9 @@ public class SSGE extends javax.swing.JFrame {
             this.jTextFieldDate.setText(this.saveGame.getMetaDate());
             this.jTextAreaDLCS.setText(this.saveGame.getDLCs());
             this.empireList = this.saveGame.getCountriesList();
+            this.speciesList = this.saveGame.getSpeciesList();
             this.jComboBoxEmpire.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.empireList)));
+            this.jComboBoxSpecies.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.speciesList)));
             this.jTabbedPanel1.setEnabled(true);
         } catch (Exception e) {
             this.jTabbedPanel1.setEnabled(false);
@@ -1033,8 +1132,35 @@ public class SSGE extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldEnergyFocusLost
 
     private void jTextFieldNewFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNewFileActionPerformed
-        // TODO add your handling code here:
+        try { 
+        } catch (Exception e) {
+        }        
     }//GEN-LAST:event_jTextFieldNewFileActionPerformed
+
+    private void jComboBoxSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSpeciesActionPerformed
+        try { 
+            this.speciesTraitsListModell.clear();
+            Set<String> s = new HashSet<String>();    
+            s.addAll(this.saveGameParameter.getSpeciesTraits());
+            s.addAll(this.saveGame.getSpesiesTraitsList(((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId()));
+            List<String> aList = new ArrayList<String>(s); 
+            aList.forEach(t -> this.speciesTraitsListModell.addElement(t));
+            
+            this.saveGame.getSpesiesTraitsList(((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId())
+                    .forEach(t -> this.jListSpeciesTrails.setSelectedValue(t, true));
+        } catch (Exception e) {
+        }
+
+    }//GEN-LAST:event_jComboBoxSpeciesActionPerformed
+
+    private void jButtonSpeciesUpdateChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSpeciesUpdateChangesActionPerformed
+        try { 
+            List<String> traitsList = new ArrayList();
+            traitsList = this.jListSpeciesTrails.getSelectedValuesList();
+            this.saveGame.updateSpeciesTraitsList(traitsList, ((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId());
+        } catch (Exception e) {
+        }    
+    }//GEN-LAST:event_jButtonSpeciesUpdateChangesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1079,10 +1205,13 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JButton jButtonFindSavegameFile;
     private javax.swing.JButton jButtonOpen;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JButton jButtonSpeciesUpdateChanges;
+    private javax.swing.JCheckBox jCheckBox16;
     private javax.swing.JCheckBox jCheckBoxIronMan;
     private javax.swing.JCheckBox jCheckBoxOtherSaveFile;
     private javax.swing.JCheckBox jCheckBoxUseTextFile;
     private javax.swing.JComboBox<String> jComboBoxEmpire;
+    private javax.swing.JComboBox<String> jComboBoxSpecies;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1099,6 +1228,8 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1106,13 +1237,16 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jListSpeciesTrails;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelEmpire;
     private javax.swing.JPanel jPanelFile;
     private javax.swing.JPanel jPanelGame;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPaneModifier;
     private javax.swing.JTabbedPane jTabbedPaneEmpire;
     private javax.swing.JTabbedPane jTabbedPanel1;

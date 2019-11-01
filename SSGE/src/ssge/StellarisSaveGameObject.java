@@ -56,6 +56,11 @@ public class StellarisSaveGameObject {
         return countries;
     }
 
+    public List<SaveGameNode> getAllSpecies() {
+        List<SaveGameNode> species = this.gamestate.getFirstChild("species").children.get(0).children;
+        return species;
+    }
+
     public SaveGameNode getPlayerCountry() {
         SaveGameNode countries = this.gamestate.getFirstChild("country").children.get(0).getFirstChild(this.playerID);
         return countries;
@@ -208,5 +213,57 @@ public class StellarisSaveGameObject {
         }
     }
 
+    public List<DropDownItem> getSpeciesList() {
+        List<DropDownItem> sVec = this.getAllSpecies().stream().map(s -> new DropDownItem(s.key("name")+ "-" +s.key("name_list"), s.key("name_list"))).collect(Collectors.toCollection(ArrayList::new));
+        return sVec;
+    }
+    
+    public SaveGameNode getSpecies(String name) {
+        SaveGameNode node = null;
+        try {
+            node = this.getAllSpecies().stream().filter(s -> s.key("name_list").contentEquals(name)).findFirst().get();
+        } catch (Exception e) {            
+        }
+        return node;
+    }
+    
+    public List<String> getSpesiesTraitsList(String name) {
+        List<String> list = this.getSpecies(name).getFirstChild("traits").getFirstChild().children.stream().map(t -> t.getFirstChild().data).collect(Collectors.toCollection(ArrayList::new));
+        return list;
+    }
+    
+    public SaveGameNode getSpesiesTrait(String name, String trait) {
+        SaveGameNode node = null;
+        try {
+            node = this.getSpecies(name).getFirstChild("traits").getFirstChild().children.stream().filter(t -> t.getFirstChild().equals(trait)).findFirst().get();
+        } catch (Exception e) {            
+        }
+        return node;
+    }
+    
+    public void deleteSpeciesTrait(String name, String trait) {
+        this.gamestate.del(this.getSpesiesTrait(name, trait));
+        System.out.println("del "+trait);
+    }
+    
+    public void addSpeciesTrait(String name, String trait) {
+        System.out.println("add");
+        if (this.getSpesiesTrait(name, trait)==null) {
+            SaveGameNode node = new SaveGameNode("trait", ssge.SaveGameNode.DataType.UNQUOTEDSTRING, ssge.SaveGameNode.NodeType.KEY);
+            node.addChild(trait, SaveGameNode.DataType.QUOTEDSTRING, SaveGameNode.NodeType.STRING);
+            this.getSpecies(name).getFirstChild("traits").getFirstChild().addChild(node);
+            System.out.println("addSpeciesTrait("+name+", "+trait+")"+this.getSpecies(name).getFirstChild("traits"));  
+        }     
+    }
+    
+    public void updateSpeciesTraitsList(List<String> tList, String name) {
+        tList.forEach(trait -> this.addSpeciesTrait(name, trait));
+        for (String trait:  this.getSpesiesTraitsList(name)) {
+            if (!tList.contains(trait)) {
+                this.deleteSpeciesTrait(name, trait);
+            }
+        }
+ 
+    }
     
 }
