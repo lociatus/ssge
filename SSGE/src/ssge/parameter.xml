@@ -227,6 +227,7 @@ and open the template in the editor.
         <trait>trait_conformists</trait>
         <trait>trait_conservational</trait>
         <trait>trait_enduring</trait>
+        <trait>trait_hive_mind</trait>
         <trait>trait_industrious</trait>
         <trait>trait_ingenious</trait>
         <trait>trait_intelligent</trait>
