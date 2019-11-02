@@ -26,6 +26,7 @@ public class SaveGameParameter implements Serializable {
     private List<String> speciesTraits;
     private List<String> leaderTraits;
     private List<String> roulerTraits;
+    private List<String> civicsList;
     
     public SaveGameParameter(String path) throws IOException, ParsingException {
         File parameterFile = new File(path);
@@ -37,7 +38,8 @@ public class SaveGameParameter implements Serializable {
         this.empireModifier = this.loadNode(doc, "empireModifier", "modifier");
         this.speciesTraits = this.loadNode(doc, "speciesTraits", "trait");
         this.leaderTraits = this.loadNode(doc, "leaderTraits", "trait");        
-        this.roulerTraits = this.loadNode(doc, "roulerTraits", "trait");        
+        this.roulerTraits = this.loadNode(doc, "roulerTraits", "trait");         
+        this.civicsList = this.loadNode(doc, "civicsList", "civic");        
     }
     
     private List<String> loadNode(Document doc, String nodeName, String itemName) {
@@ -72,5 +74,9 @@ public class SaveGameParameter implements Serializable {
 
     public List<String> getRoulerTraits() {
         return roulerTraits;
+    }
+
+    public List<String> getCivicsList() {
+        return civicsList;
     }
 }
