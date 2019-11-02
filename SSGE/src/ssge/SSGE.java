@@ -5,9 +5,9 @@
  */
 package ssge;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +44,31 @@ public class SSGE extends javax.swing.JFrame {
             System.out.println("parameter.xml not found\n e="+e);
         }
         initComponents();
+    }
+    
+    private void updateEmpireRess() {   
+        this.jTextFieldEnergy.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "energy"));
+        this.jTextFieldMinerals.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "minerals"));
+        this.jTextFieldFood.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "food"));
+        this.jTextFieldInfluence.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "influence"));
+        this.jTextFieldUnity.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "unity"));
+        this.jTextFieldAlloys.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "alloys"));
+        this.jTextFieldConsumerGoods.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "consumer_goods"));
+        this.jTextFieldVolatileMotes.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "volatile_motes"));
+        this.jTextFieldExoticGases.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "exotic_gases"));
+        this.jTextFieldRareCrystals.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "rare_crystals"));
+        this.jTextFieldLivingMetal.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "sr_living_metal"));
+        this.jTextFieldZro.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "sr_zro"));
+        this.jTextFieldDarkMatter.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "sr_dark_matter"));
+        this.jTextFieldNanites.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "nanites"));
+    }
+    
+    private void updateGameInfo() {
+        this.jCheckBoxIronMan.setSelected(this.saveGame.isIronman());
+        this.jTextFieldVersion.setText(this.saveGame.getVersion());
+        this.jTextFieldName.setText(this.saveGame.getName());
+        this.jTextFieldDate.setText(this.saveGame.getMetaDate());
+        this.jTextAreaDLCS.setText(this.saveGame.getDLCs());
     }
 
     /**
@@ -377,8 +402,8 @@ public class SSGE extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(259, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(148, Short.MAX_VALUE))
         );
 
         jTabbedPanel1.addTab("Game", jPanelGame);
@@ -875,15 +900,13 @@ public class SSGE extends javax.swing.JFrame {
             }
             this.sgf.stringToSGN();
             this.saveGame = new StellarisSaveGameObject(this.sgf.metaSGN, this.sgf.gameStateSGN);
-            this.jCheckBoxIronMan.setSelected(this.saveGame.isIronman());
-            this.jTextFieldVersion.setText(this.saveGame.getVersion());
-            this.jTextFieldName.setText(this.saveGame.getName());
-            this.jTextFieldDate.setText(this.saveGame.getMetaDate());
-            this.jTextAreaDLCS.setText(this.saveGame.getDLCs());
+            this.updateGameInfo();
             this.empireList = this.saveGame.getCountriesList();
             this.speciesList = this.saveGame.getSpeciesList();
             this.jComboBoxEmpire.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.empireList)));
             this.jComboBoxSpecies.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.speciesList)));
+            this.jComboBoxEmpireActionPerformed(null);
+            this.jComboBoxSpeciesActionPerformed(null);
             this.jTabbedPanel1.setEnabled(true);
         } catch (Exception e) {
             this.jTabbedPanel1.setEnabled(false);
@@ -895,26 +918,12 @@ public class SSGE extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxIronManActionPerformed
 
     private void jComboBoxEmpireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEmpireActionPerformed
-
         try {
             this.jTabbedPaneEmpire.setEnabled(true);
-            this.jTextFieldEnergy.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "energy"));
-            this.jTextFieldMinerals.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "minerals"));
-            this.jTextFieldFood.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "food"));
-            this.jTextFieldInfluence.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "influence"));
-            this.jTextFieldUnity.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "unity"));
-            this.jTextFieldAlloys.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "alloys"));
-            this.jTextFieldConsumerGoods.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "consumer_goods"));
-            this.jTextFieldVolatileMotes.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "volatile_motes"));
-            this.jTextFieldExoticGases.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "exotic_gases"));
-            this.jTextFieldRareCrystals.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "rare_crystals"));
-            this.jTextFieldLivingMetal.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "sr_living_metal"));
-            this.jTextFieldZro.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "sr_zro"));
-            this.jTextFieldDarkMatter.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "sr_dark_matter"));
-            this.jTextFieldNanites.setText(this.saveGame.getRess(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), "nanites"));
+            this.updateEmpireRess();
         } catch (Exception e) {
             this.jTabbedPanel1.setEnabled(false);
-        }// TODO add your handling code here:
+        }
     }//GEN-LAST:event_jComboBoxEmpireActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
@@ -1143,8 +1152,9 @@ public class SSGE extends javax.swing.JFrame {
             Set<String> s = new HashSet<String>();    
             s.addAll(this.saveGameParameter.getSpeciesTraits());
             s.addAll(this.saveGame.getSpesiesTraitsList(((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId()));
-            List<String> aList = new ArrayList<String>(s); 
-            aList.forEach(t -> this.speciesTraitsListModell.addElement(t));
+            List<String> tList = new ArrayList<String>(s); 
+            Collections.sort(tList);
+            tList.forEach(t -> this.speciesTraitsListModell.addElement(t));
             
             this.saveGame.getSpesiesTraitsList(((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId())
                     .forEach(t -> this.jListSpeciesTrails.setSelectedValue(t, true));
