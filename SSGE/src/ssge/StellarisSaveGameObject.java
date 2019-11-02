@@ -290,12 +290,10 @@ public class StellarisSaveGameObject {
     }
     
     public void deleteCountryCivic(String cid, String civic) {
-        System.out.println("del:"+cid+":"+civic);
         this.gamestate.del(this.getCountry(cid).getFirstChild().keyNode("government").keyNode("civics").children.stream().filter(c -> c.data.equals(civic)).findFirst().get());
     }
     
     public void addCountryCivic(String cid, String civic) {
-        System.out.println("add:"+cid+":"+civic);
         if (!this.countryCivicExists(cid, civic)) {
             SaveGameNode node = new SaveGameNode(civic,SaveGameNode.DataType.QUOTEDSTRING, SaveGameNode.NodeType.VALUE);
             this.getCountry(cid).getFirstChild().keyNode("government").getFirstChild("civics").getFirstChild().addChild(node);
@@ -307,9 +305,7 @@ public class StellarisSaveGameObject {
         for (String civic : this.getCountryCivicList(cid)) {
             if (!civics.contains(civic)) {
                 this.deleteCountryCivic(cid, civic);
-            }
-            
+            }            
         }
-        System.out.println("update:\n"+this.getCountry(cid).getFirstChild().keyNode("government").getFirstChild("civics").toString()+"\nend");
     }
 }
