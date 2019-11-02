@@ -27,6 +27,7 @@ public class SSGE extends javax.swing.JFrame {
     private List<DropDownItem> empireList;
     private List<DropDownItem> speciesList;
     private DefaultListModel speciesTraitsListModell;
+    private DefaultListModel countryCivicsListModell;
     private SaveGameParameter saveGameParameter;
 
     /**
@@ -37,6 +38,7 @@ public class SSGE extends javax.swing.JFrame {
         this.empireList = new ArrayList();
         this.speciesList = new ArrayList();
         this.speciesTraitsListModell = new DefaultListModel();
+        this.countryCivicsListModell = new DefaultListModel();
         try {
             URL url = getClass().getResource("parameter.xml");
             this.saveGameParameter = new SaveGameParameter(url.getPath());
@@ -69,6 +71,21 @@ public class SSGE extends javax.swing.JFrame {
         this.jTextFieldName.setText(this.saveGame.getName());
         this.jTextFieldDate.setText(this.saveGame.getMetaDate());
         this.jTextAreaDLCS.setText(this.saveGame.getDLCs());
+    }
+    
+    private void updateCountryCivics() {                                                        
+        try { 
+            this.countryCivicsListModell.clear();
+            String cid = ((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId();
+            Set<String> s = new HashSet<>();    
+            s.addAll(this.saveGameParameter.getCivicsList());
+            s.addAll(this.saveGame.getCountryCivicList(cid));
+            List<String> cList = new ArrayList<>(s); 
+            Collections.sort(cList);
+            cList.forEach(c -> this.countryCivicsListModell.addElement(c));            
+            this.saveGame.getCountryCivicList(cid).forEach(c -> this.jListCivics.setSelectedValue(c, true));
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -146,6 +163,10 @@ public class SSGE extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPaneModifier = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jListCivics = new javax.swing.JList<>();
+        jButtonUpdateCivics = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel24 = new javax.swing.JLabel();
         jComboBoxSpecies = new javax.swing.JComboBox<>();
@@ -729,7 +750,55 @@ public class SSGE extends javax.swing.JFrame {
         jTabbedPaneEmpire.addTab("Modifier", jScrollPaneModifier);
 
         jPanel3.setLayout(new java.awt.GridLayout(1, 0));
-        jTabbedPaneEmpire.addTab("Test", jPanel3);
+
+        jListCivics.setModel(this.countryCivicsListModell);
+        jListCivics.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if(super.isSelectedIndex(index0)) {
+                    super.removeSelectionInterval(index0, index1);
+                }
+                else {
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+        });
+        jScrollPane2.setViewportView(jListCivics);
+
+        jButtonUpdateCivics.setText("Update Civics");
+        jButtonUpdateCivics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonUpdateCivicsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(112, 112, 112)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(190, 190, 190)
+                        .addComponent(jButtonUpdateCivics)))
+                .addContainerGap(392, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonUpdateCivics)
+                .addGap(69, 69, 69))
+        );
+
+        jPanel3.add(jPanel5);
+
+        jTabbedPaneEmpire.addTab("Civics", jPanel3);
 
         javax.swing.GroupLayout jPanelEmpireLayout = new javax.swing.GroupLayout(jPanelEmpire);
         jPanelEmpire.setLayout(jPanelEmpireLayout);
@@ -921,6 +990,7 @@ public class SSGE extends javax.swing.JFrame {
         try {
             this.jTabbedPaneEmpire.setEnabled(true);
             this.updateEmpireRess();
+            this.updateCountryCivics();
         } catch (Exception e) {
             this.jTabbedPanel1.setEnabled(false);
         }
@@ -1149,10 +1219,10 @@ public class SSGE extends javax.swing.JFrame {
     private void jComboBoxSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSpeciesActionPerformed
         try { 
             this.speciesTraitsListModell.clear();
-            Set<String> s = new HashSet<String>();    
+            Set<String> s = new HashSet<>();    
             s.addAll(this.saveGameParameter.getSpeciesTraits());
             s.addAll(this.saveGame.getSpesiesTraitsList(((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId()));
-            List<String> tList = new ArrayList<String>(s); 
+            List<String> tList = new ArrayList<>(s); 
             Collections.sort(tList);
             tList.forEach(t -> this.speciesTraitsListModell.addElement(t));
             
@@ -1171,6 +1241,15 @@ public class SSGE extends javax.swing.JFrame {
         } catch (Exception e) {
         }    
     }//GEN-LAST:event_jButtonSpeciesUpdateChangesActionPerformed
+
+    private void jButtonUpdateCivicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateCivicsActionPerformed
+        try { 
+            List<String> civicsList = new ArrayList();
+            civicsList = this.jListCivics.getSelectedValuesList();
+            this.saveGame.updateCountryCivicsList(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), civicsList);
+        } catch (Exception e) {
+        }   
+    }//GEN-LAST:event_jButtonUpdateCivicsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1216,6 +1295,7 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JButton jButtonOpen;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSpeciesUpdateChanges;
+    private javax.swing.JButton jButtonUpdateCivics;
     private javax.swing.JCheckBox jCheckBox16;
     private javax.swing.JCheckBox jCheckBoxIronMan;
     private javax.swing.JCheckBox jCheckBoxOtherSaveFile;
@@ -1247,15 +1327,18 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jListCivics;
     private javax.swing.JList<String> jListSpeciesTrails;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEmpire;
     private javax.swing.JPanel jPanelFile;
     private javax.swing.JPanel jPanelGame;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPaneModifier;
     private javax.swing.JTabbedPane jTabbedPaneEmpire;
