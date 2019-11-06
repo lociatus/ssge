@@ -90,7 +90,6 @@ public class StellarisSaveGameObject {
     /**
      * Editing Game Info
      */
-
     public String getVersion() {
         return this.meta.key("version");
     }
@@ -192,14 +191,25 @@ public class StellarisSaveGameObject {
      * Editing Country Modifier
      */
     public List<DropDownItem> getCountryModifierList(String cid) {
-        List<DropDownItem> modifiers = this.getCountry(cid).getFirstChild().getAllChilden("timed_modifier").stream().map(m -> new DropDownItem(m.getFirstChild().key("modifier"), m.getFirstChild().key("days"))).collect(Collectors.toCollection(ArrayList::new));
+        List<DropDownItem> modifiers = this.getCountry(cid)
+                                           .getFirstChild()
+                                           .getAllChilden("timed_modifier")
+                                           .stream()
+                                           .map(m -> new DropDownItem(m.getFirstChild().key("modifier"), m.getFirstChild().key("days")))
+                                           .collect(Collectors.toCollection(ArrayList::new));
         return modifiers;
     }
     
     public SaveGameNode getContryModifier(String cid, String modifier) {
         SaveGameNode node = null;
         try {
-            node = this.getCountry(cid).getFirstChild().getAllChilden("timed_modifier").stream().filter(m->m.getFirstChild().keyNode("modifier").equals(modifier)).findFirst().get();    
+            node = this.getCountry(cid)
+                       .getFirstChild()
+                       .getAllChilden("timed_modifier")
+                       .stream()
+                       .filter(m->m.getFirstChild().keyNode("modifier").equals(modifier))
+                       .findFirst()
+                       .get();    
         } catch (Exception e) {            
         }
     
@@ -212,8 +222,10 @@ public class StellarisSaveGameObject {
         } catch (Exception e) {
             SaveGameNode node = new SaveGameNode("timed_modifier", SaveGameNode.DataType.UNQUOTEDSTRING, SaveGameNode.NodeType.KEY);            
             SaveGameNode list = new SaveGameNode("", SaveGameNode.DataType.NULL, SaveGameNode.NodeType.LIST);
-            list.addChild("modifier", SaveGameNode.DataType.UNQUOTEDSTRING, SaveGameNode.NodeType.KEY).addChild(modifier, SaveGameNode.DataType.QUOTEDSTRING, SaveGameNode.NodeType.STRING);
-            list.addChild("days", SaveGameNode.DataType.UNQUOTEDSTRING, SaveGameNode.NodeType.KEY).addChild(days, SaveGameNode.DataType.INTNUMBER, SaveGameNode.NodeType.VALUE);
+            list.addChild("modifier", SaveGameNode.DataType.UNQUOTEDSTRING, SaveGameNode.NodeType.KEY)
+                .addChild(modifier, SaveGameNode.DataType.QUOTEDSTRING, SaveGameNode.NodeType.STRING);
+            list.addChild("days", SaveGameNode.DataType.UNQUOTEDSTRING, SaveGameNode.NodeType.KEY)
+                .addChild(days, SaveGameNode.DataType.INTNUMBER, SaveGameNode.NodeType.VALUE);
             node.addChild(list);
             this.getCountry(cid).getFirstChild().addChild(node);
         }
@@ -230,28 +242,48 @@ public class StellarisSaveGameObject {
      * Editing Species Traits
      */    
     public List<DropDownItem> getSpeciesList() {
-        List<DropDownItem> sVec = this.getAllSpecies().stream().map(s -> new DropDownItem(s.key("name")+ "-" +s.key("name_list"), s.key("name_list"))).collect(Collectors.toCollection(ArrayList::new));
+        List<DropDownItem> sVec = this.getAllSpecies()
+                .stream()
+                .map(s -> new DropDownItem(s.key("name")+ "-" +s.key("name_list"), s.key("name_list")))
+                .collect(Collectors.toCollection(ArrayList::new));
         return sVec;
     }
     
     public SaveGameNode getSpecies(String name) {
         SaveGameNode node = null;
         try {
-            node = this.getAllSpecies().stream().filter(s -> s.key("name_list").contentEquals(name)).findFirst().get();
+            node = this.getAllSpecies()
+                    .stream()
+                    .filter(s -> s.key("name_list").contentEquals(name))
+                    .findFirst()
+                    .get();
         } catch (Exception e) {            
         }
         return node;
     }
     
     public List<String> getSpesiesTraitsList(String name) {
-        List<String> list = this.getSpecies(name).getFirstChild("traits").getFirstChild().children.stream().map(t -> t.getFirstChild().data).collect(Collectors.toCollection(ArrayList::new));
+        List<String> list = this.getSpecies(name)
+                                .getFirstChild("traits")
+                                .getFirstChild()
+                                .children
+                                .stream()
+                                .map(t -> t.getFirstChild().data)
+                                .collect(Collectors.toCollection(ArrayList::new));
         return list;
     }
     
     public SaveGameNode getSpesiesTrait(String name, String trait) {
         SaveGameNode node = null;
         try {
-            node = this.getSpecies(name).getFirstChild("traits").getFirstChild().children.stream().filter(t -> t.getFirstChild().equals(trait)).findFirst().get();
+            node = this.getSpecies(name)
+                       .getFirstChild("traits")
+                       .getFirstChild()
+                       .children
+                       .stream()
+                       .filter(t -> t.getFirstChild().equals(trait))
+                       .findFirst()
+                       .get();
         } catch (Exception e) {            
         }
         return node;
@@ -282,21 +314,48 @@ public class StellarisSaveGameObject {
      * Editing Country Civics
      */    
     public List<String> getCountryCivicList(String cid) {
-        return this.getCountry(cid).getFirstChild().keyNode("government").keyNode("civics").children.stream().map(c -> c.data).collect(Collectors.toCollection(ArrayList::new));        
+        return this.getCountry(cid)
+                .getFirstChild()
+                .keyNode("government")
+                .keyNode("civics")
+                .children
+                .stream()
+                .map(c -> c.data)
+                .collect(Collectors.toCollection(ArrayList::new));        
     }
     
     public boolean countryCivicExists(String cid, String civic) {
-        return this.getCountry(cid).getFirstChild().keyNode("government").keyNode("civics").children.stream().filter(c -> c.data.equals(civic)).findFirst().isPresent();
+        return this.getCountry(cid)
+                .getFirstChild()
+                .keyNode("government")
+                .keyNode("civics")
+                .children
+                .stream()
+                .filter(c -> c.data.equals(civic))
+                .findFirst()
+                .isPresent();
     }
     
     public void deleteCountryCivic(String cid, String civic) {
-        this.gamestate.del(this.getCountry(cid).getFirstChild().keyNode("government").keyNode("civics").children.stream().filter(c -> c.data.equals(civic)).findFirst().get());
+        this.gamestate.del(this.getCountry(cid)
+                .getFirstChild()
+                .keyNode("government")
+                .keyNode("civics")
+                .children.stream()
+                .filter(c -> c.data.equals(civic))
+                .findFirst()
+                .get());
     }
     
     public void addCountryCivic(String cid, String civic) {
         if (!this.countryCivicExists(cid, civic)) {
             SaveGameNode node = new SaveGameNode(civic,SaveGameNode.DataType.QUOTEDSTRING, SaveGameNode.NodeType.VALUE);
-            this.getCountry(cid).getFirstChild().keyNode("government").getFirstChild("civics").getFirstChild().addChild(node);
+            this.getCountry(cid)
+                    .getFirstChild()
+                    .keyNode("government")
+                    .getFirstChild("civics")
+                    .getFirstChild()
+                    .addChild(node);
         }
     }
     

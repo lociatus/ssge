@@ -1376,7 +1376,6 @@ public class SSGE extends javax.swing.JFrame {
             this.jCheckBoxCountryActive.setSelected(false);
             this.jTextFieldCountryModifierDays.setText("");
         } else {
-            System.out.println(node);
             this.jCheckBoxCountryActive.setSelected(true);
             this.jTextFieldCountryModifierDays.setText(node.getFirstChild().key("days"));
         }
