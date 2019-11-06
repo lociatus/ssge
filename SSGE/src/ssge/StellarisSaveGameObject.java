@@ -208,7 +208,7 @@ public class StellarisSaveGameObject {
 
     public void setCountryModifier(String cid, String modifier, String days) {
         try {
-            this.getContryModifier(cid, modifier).getFirstChild().getFirstChild("days").data = days;
+            this.getContryModifier(cid, modifier).getFirstChild().keyNode("days").data = days;
         } catch (Exception e) {
             SaveGameNode node = new SaveGameNode("timed_modifier", SaveGameNode.DataType.UNQUOTEDSTRING, SaveGameNode.NodeType.KEY);            
             SaveGameNode list = new SaveGameNode("", SaveGameNode.DataType.NULL, SaveGameNode.NodeType.LIST);

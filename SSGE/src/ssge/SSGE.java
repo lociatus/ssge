@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFileChooser;
@@ -26,8 +27,10 @@ public class SSGE extends javax.swing.JFrame {
     private StellarisSaveGameObject saveGame;
     private List<DropDownItem> empireList;
     private List<DropDownItem> speciesList;
+    private List<DropDownItem> allCountryModifierList;
     private DefaultListModel speciesTraitsListModell;
     private DefaultListModel countryCivicsListModell;
+    private DefaultListModel countryModifierListModell;
     private SaveGameParameter saveGameParameter;
 
     /**
@@ -37,8 +40,10 @@ public class SSGE extends javax.swing.JFrame {
         this.sgf = new IOSaveGameFile();
         this.empireList = new ArrayList();
         this.speciesList = new ArrayList();
+        this.allCountryModifierList = new ArrayList();
         this.speciesTraitsListModell = new DefaultListModel();
         this.countryCivicsListModell = new DefaultListModel();
+        this.countryModifierListModell = new DefaultListModel();
         try {
             URL url = getClass().getResource("parameter.xml");
             this.saveGameParameter = new SaveGameParameter(url.getPath());
@@ -86,6 +91,20 @@ public class SSGE extends javax.swing.JFrame {
             this.saveGame.getCountryCivicList(cid).forEach(c -> this.jListCivics.setSelectedValue(c, true));
         } catch (Exception e) {
         }
+    }
+    
+    private void updateCountryModifierList() {
+        this.countryModifierListModell.clear();
+        String cid = ((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId();
+        List<String> mList = this.saveGame.getCountryModifierList(cid).stream().map(i -> "("+i.getId()+" Days) "+i.getText()).collect(Collectors.toCollection(ArrayList::new));
+        mList.forEach(m -> this.countryModifierListModell.addElement(m));
+        List<String> dmList = this.saveGame.getCountryModifierList(cid)
+                .stream()
+                .filter(m -> !this.saveGameParameter.getEmpireModifier().contains(m.getText()))
+                .map(m -> m.getText())
+                .collect(Collectors.toCollection(ArrayList::new));
+        dmList.forEach(m -> this.allCountryModifierList.add(new DropDownItem(m,"")));
+        this.jComboBoxSelectedCountryModifier.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.allCountryModifierList)));
     }
 
     /**
@@ -162,6 +181,13 @@ public class SSGE extends javax.swing.JFrame {
         jTextFieldNanites = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPaneModifier = new javax.swing.JScrollPane();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jListCountryModifierList = new javax.swing.JList<>();
+        jComboBoxSelectedCountryModifier = new javax.swing.JComboBox<>();
+        jCheckBoxCountryActive = new javax.swing.JCheckBox();
+        jTextFieldCountryModifierDays = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -747,6 +773,78 @@ public class SSGE extends javax.swing.JFrame {
 
         jScrollPaneModifier.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPaneModifier.setToolTipText("");
+
+        jListCountryModifierList.setModel(this.countryModifierListModell);
+        jListCountryModifierList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListCountryModifierList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListCountryModifierListValueChanged(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jListCountryModifierList);
+
+        jComboBoxSelectedCountryModifier.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {" "}));
+        jComboBoxSelectedCountryModifier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxSelectedCountryModifierActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxCountryActive.setText("Active");
+        jCheckBoxCountryActive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxCountryActiveActionPerformed(evt);
+            }
+        });
+
+        jTextFieldCountryModifierDays.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldCountryModifierDaysFocusLost(evt);
+            }
+        });
+        jTextFieldCountryModifierDays.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldCountryModifierDaysActionPerformed(evt);
+            }
+        });
+
+        jLabel26.setText("Days");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBoxCountryActive, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxSelectedCountryModifier, 0, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldCountryModifierDays, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel26)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBoxCountryActive)
+                            .addComponent(jComboBoxSelectedCountryModifier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldCountryModifierDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel26))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jScrollPaneModifier.setViewportView(jPanel6);
+
         jTabbedPaneEmpire.addTab("Modifier", jScrollPaneModifier);
 
         jPanel3.setLayout(new java.awt.GridLayout(1, 0));
@@ -972,10 +1070,12 @@ public class SSGE extends javax.swing.JFrame {
             this.updateGameInfo();
             this.empireList = this.saveGame.getCountriesList();
             this.speciesList = this.saveGame.getSpeciesList();
+            this.allCountryModifierList = this.saveGameParameter.getEmpireModifierDD();
             this.jComboBoxEmpire.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.empireList)));
             this.jComboBoxSpecies.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector(this.speciesList)));
             this.jComboBoxEmpireActionPerformed(null);
             this.jComboBoxSpeciesActionPerformed(null);
+            this.updateCountryModifierList();
             this.jTabbedPanel1.setEnabled(true);
         } catch (Exception e) {
             this.jTabbedPanel1.setEnabled(false);
@@ -1235,8 +1335,7 @@ public class SSGE extends javax.swing.JFrame {
 
     private void jButtonSpeciesUpdateChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSpeciesUpdateChangesActionPerformed
         try { 
-            List<String> traitsList = new ArrayList();
-            traitsList = this.jListSpeciesTrails.getSelectedValuesList();
+            List<String> traitsList = this.jListSpeciesTrails.getSelectedValuesList();
             this.saveGame.updateSpeciesTraitsList(traitsList, ((DropDownItem) this.jComboBoxSpecies.getSelectedItem()).getId());
         } catch (Exception e) {
         }    
@@ -1244,12 +1343,49 @@ public class SSGE extends javax.swing.JFrame {
 
     private void jButtonUpdateCivicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateCivicsActionPerformed
         try { 
-            List<String> civicsList = new ArrayList();
-            civicsList = this.jListCivics.getSelectedValuesList();
+            List<String> civicsList = this.jListCivics.getSelectedValuesList();
             this.saveGame.updateCountryCivicsList(((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId(), civicsList);
         } catch (Exception e) {
         }   
     }//GEN-LAST:event_jButtonUpdateCivicsActionPerformed
+
+    private void jCheckBoxCountryActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxCountryActiveActionPerformed
+        String cid = ((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId();
+        String modifier = ((DropDownItem) this.jComboBoxSelectedCountryModifier.getSelectedItem()).getText();
+        String days = this.jTextFieldCountryModifierDays.getText();
+        if (!this.jCheckBoxCountryActive.isSelected()) {
+            this.saveGame.delCountryModifier(cid, modifier);
+        } else {
+            this.saveGame.setCountryModifier(cid, modifier, days);
+        } 
+    }//GEN-LAST:event_jCheckBoxCountryActiveActionPerformed
+
+    private void jTextFieldCountryModifierDaysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCountryModifierDaysActionPerformed
+        this.jCheckBoxCountryActiveActionPerformed(evt);
+    }//GEN-LAST:event_jTextFieldCountryModifierDaysActionPerformed
+
+    private void jListCountryModifierListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCountryModifierListValueChanged
+
+    }//GEN-LAST:event_jListCountryModifierListValueChanged
+
+    private void jComboBoxSelectedCountryModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSelectedCountryModifierActionPerformed
+        String cid = ((DropDownItem) this.jComboBoxEmpire.getSelectedItem()).getId();
+        String modifier = ((DropDownItem) this.jComboBoxSelectedCountryModifier.getSelectedItem()).getText();
+        SaveGameNode node = this.saveGame.getContryModifier(cid, modifier);
+        if (node==null) {
+            this.jCheckBoxCountryActive.setSelected(false);
+            this.jTextFieldCountryModifierDays.setText("");
+        } else {
+            System.out.println(node);
+            this.jCheckBoxCountryActive.setSelected(true);
+            this.jTextFieldCountryModifierDays.setText(node.getFirstChild().key("days"));
+        }
+        this.updateCountryModifierList();
+    }//GEN-LAST:event_jComboBoxSelectedCountryModifierActionPerformed
+
+    private void jTextFieldCountryModifierDaysFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldCountryModifierDaysFocusLost
+        this.jComboBoxSelectedCountryModifierActionPerformed(null);
+    }//GEN-LAST:event_jTextFieldCountryModifierDaysFocusLost
 
     /**
      * @param args the command line arguments
@@ -1297,10 +1433,12 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSpeciesUpdateChanges;
     private javax.swing.JButton jButtonUpdateCivics;
     private javax.swing.JCheckBox jCheckBox16;
+    private javax.swing.JCheckBox jCheckBoxCountryActive;
     private javax.swing.JCheckBox jCheckBoxIronMan;
     private javax.swing.JCheckBox jCheckBoxOtherSaveFile;
     private javax.swing.JCheckBox jCheckBoxUseTextFile;
     private javax.swing.JComboBox<String> jComboBoxEmpire;
+    private javax.swing.JComboBox<String> jComboBoxSelectedCountryModifier;
     private javax.swing.JComboBox<String> jComboBoxSpecies;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1320,6 +1458,7 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1328,24 +1467,28 @@ public class SSGE extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jListCivics;
+    private javax.swing.JList<String> jListCountryModifierList;
     private javax.swing.JList<String> jListSpeciesTrails;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanelEmpire;
     private javax.swing.JPanel jPanelFile;
     private javax.swing.JPanel jPanelGame;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPaneModifier;
     private javax.swing.JTabbedPane jTabbedPaneEmpire;
     private javax.swing.JTabbedPane jTabbedPanel1;
     private javax.swing.JTextArea jTextAreaDLCS;
     private javax.swing.JTextField jTextFieldAlloys;
     private javax.swing.JTextField jTextFieldConsumerGoods;
+    private javax.swing.JTextField jTextFieldCountryModifierDays;
     private javax.swing.JTextField jTextFieldDarkMatter;
     private javax.swing.JTextField jTextFieldDate;
     private javax.swing.JTextField jTextFieldEnergy;
