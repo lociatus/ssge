@@ -205,7 +205,14 @@ and open the template in the editor.
         <modifier>artifact_cybrex_research_completed</modifier>
         <modifier>artifact_league_research_completed</modifier>
         <modifier>artifact_irassian_research_completed</modifier>
-        <modifier>artifact_zroni_research_completed</modifier>        
+        <modifier>artifact_zroni_research_completed</modifier>
+        <modifier>solar_harvesting_bacteria</modifier>
+        <modifier>galactic_market_founder</modifier>
+        <modifier>spectral_residue_studies</modifier>
+        <modifier>enclave_artist_patron</modifier>
+        <modifier>relic_activation_cooldown</modifier>
+        <modifier>curator_insight</modifier>
+        <modifier>artifact_lgate_insight_cooldown</modifier>      
     </empireModifier>
     <speciesTraits>
         <trait>trait_pc_arid_preference</trait>

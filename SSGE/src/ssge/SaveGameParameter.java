@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
@@ -62,6 +63,10 @@ public class SaveGameParameter implements Serializable {
 
     public List<String> getEmpireModifier() {
         return empireModifier;
+    }
+
+    public List<DropDownItem> getEmpireModifierDD() {
+        return this.empireModifier.stream().map(m -> new DropDownItem(m, "")).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public List<String> getSpeciesTraits() {
